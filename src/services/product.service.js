@@ -1,24 +1,27 @@
-import { Product } from "../models/product.model.js";
+import { ProductRepository } from "../repositories/product.repository.js";
 
-export class ProductManager {
+const productRepository = new ProductRepository();
 
-  async getAll() {
-    return await Product.find();
+export class ProductService {
+
+  getProducts() {
+    return productRepository.getProducts();
   }
 
-  async getById(id) {
-    return await Product.findById(id);
+  getProductById(id) {
+    return productRepository.getProductById(id);
   }
 
-  async create(productData) {
-    return await Product.create(productData);
+  createProduct(data) {
+    return productRepository.createProduct(data);
   }
 
-  async update(id, updateData) {
-    return await Product.findByIdAndUpdate(id, updateData, { new: true });
+  updateProduct(id, data) {
+    return productRepository.updateProduct(id, data);
   }
 
-  async delete(id) {
-    return await Product.findByIdAndDelete(id);
+  deleteProduct(id) {
+    return productRepository.deleteProduct(id);
   }
+
 }

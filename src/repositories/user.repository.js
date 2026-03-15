@@ -1,27 +1,27 @@
+import { UserDAO } from "../dao/user.dao.js";
+
+const userDAO = new UserDAO();
+
 export class UserRepository {
 
-  constructor(dao) {
-    this.dao = dao;
-  }
-
-  getAllUsers() {
-    return this.dao.getAll();
+  getUsers() {
+    return userDAO.getAll();
   }
 
   getUserById(id) {
-    return this.dao.getById(id);
+    return userDAO.getById(id);
   }
 
   getUserByEmail(email) {
-    return this.dao.getByEmail(email);
+    return userDAO.getByEmail(email);
   }
 
-  createUser(userData) {
-    return this.dao.create(userData);
+  createUser(data) {
+    return userDAO.create(data);
   }
 
   deleteUser(id) {
-    return this.dao.delete(id);
+    return userDAO.delete(id);
   }
 
 }

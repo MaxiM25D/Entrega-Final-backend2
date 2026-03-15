@@ -1,12 +1,14 @@
-import { User } from "../models/user.model.js";
+import { UserRepository } from "../repositories/user.repository.js";
 import { isValidPassword } from "../utils/bcrypt.js";
 import { generateToken } from "../utils/jwt.js";
 
-export class SessionManager {
+const userRepository = new UserRepository();
+
+export class SessionService {
 
   async loginUser(email, password) {
 
-    const user = await User.findOne({ email });
+    const user = await userRepository.getUserByEmail(email);
 
     if (!user) {
       throw new Error("Invalid credentials");

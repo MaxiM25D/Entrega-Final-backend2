@@ -1,8 +1,11 @@
 import jwt from "jsonwebtoken";
 import env from "../config/env.config.js";
-import { User } from "../models/user.model.js";
+import { UserService } from "../services/user.service.js";
+
+const userService = new UserService();
 
 export const auth = async (req, res, next) => {
+
   try {
 
     const authHeader = req.headers.authorization;
@@ -15,7 +18,7 @@ export const auth = async (req, res, next) => {
 
     const decoded = jwt.verify(token, env.JWT_SECRET);
 
-    const user = await User.findById(decoded.sub);
+    const user = await userService.getUserById(decoded.sub);
 
     if (!user) {
       return res.status(401).json({ message: "Invalid token" });
@@ -26,6 +29,9 @@ export const auth = async (req, res, next) => {
     next();
 
   } catch (error) {
+
     return res.status(401).json({ message: "Unauthorized" });
+
   }
+
 };

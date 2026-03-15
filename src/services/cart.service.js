@@ -1,23 +1,25 @@
-import { Cart } from "../models/cart.model.js";
+import { CartRepository } from "../repositories/cart.repository.js";
 
-export class CartManager {
+const cartRepository = new CartRepository();
 
-  async create() {
-    return await Cart.create({ products: [] });
+export class CartService {
+
+  async createCart() {
+    return cartRepository.createCart();
   }
 
-  async getById(id) {
-    return await Cart.findById(id).populate("products.product");
+  async getCartById(id) {
+    return cartRepository.getCartById(id);
   }
 
   async addProduct(cartId, productId) {
 
-    const cart = await Cart.findById(cartId);
+    const cart = await cartRepository.getCartById(cartId);
 
     if (!cart) return null;
 
     const existingProduct = cart.products.find(
-      p => p.product.toString() === productId
+      p => p.product._id.toString() === productId
     );
 
     if (existingProduct) {
@@ -26,7 +28,8 @@ export class CartManager {
       cart.products.push({ product: productId, quantity: 1 });
     }
 
-    await cart.save();
+    await cartRepository.saveCart(cart);
+
     return cart;
   }
 }

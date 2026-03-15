@@ -2,23 +2,23 @@ import { User } from "../models/user.model.js";
 
 export class UserDAO {
 
-  async getAll() {
+  getAll() {
     return User.find();
   }
 
-  async getById(id) {
+  getById(id) {
     return User.findById(id).lean();
   }
 
-  async getByEmail(email) {
+  getByEmail(email) {
     return User.findOne({ email });
   }
 
-  async create(userData) {
+  create(userData) {
     return User.create(userData);
   }
 
-  async delete(id) {
+  delete(id) {
     return User.findByIdAndDelete(id);
   }
 

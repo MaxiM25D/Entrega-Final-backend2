@@ -1,40 +1,66 @@
-import { CartManager } from "../managers/cart.manager.js";
+import { CartService } from "../services/cart.service.js";
+import { CartDTO } from "../dto/cart.dto.js";
 
-const cartManager = new CartManager();
+const cartService = new CartService();
 
 export const createCart = async (req, res) => {
+
   try {
-    const newCart = await cartManager.create();
-    res.status(201).json({ message: "Carrito creado con exito!", newCart });
+
+    const cart = await cartService.createCart();
+
+    res.status(201).json({
+      message: "Carrito creado",
+      cart: new CartDTO(cart)
+    });
+
   } catch (error) {
+
     res.status(500).json({ error: error.message });
+
   }
+
 };
 
 export const getCartById = async (req, res) => {
+
   try {
-    const cart = await cartManager.getById(req.params.id);
+
+    const cart = await cartService.getCartById(req.params.cid);
+
     if (!cart) {
       return res.status(404).json({ message: "Carrito no encontrado" });
     }
 
-    res.json({message: "Carrito por ID obtenido con exito!", cart});
+    res.json({
+      cart: new CartDTO(cart)
+    });
+
   } catch (error) {
+
     res.status(500).json({ error: error.message });
+
   }
+
 };
 
 export const addProductToCart = async (req, res) => {
-  try {
-    const user = req.user;
-    const productId = req.params.pid;
-    const updatedCart = await cartManager.addProduct(
-      user.cart,
-      productId
-    );
 
-    res.json({message: "Producto agregado al carrito con exito!", updatedCart});
+  try {
+
+    const { cid, pid } = req.params;
+
+    const cart = await cartService.addProduct(cid, pid);
+
+    res.json({
+      message: "Producto agregado al carrito",
+      cart: new CartDTO(cart)
+    });
+
   } catch (error) {
+
     res.status(500).json({ error: error.message });
+
   }
+
 };
