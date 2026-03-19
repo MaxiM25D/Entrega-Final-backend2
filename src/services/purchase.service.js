@@ -1,7 +1,7 @@
 import { CartRepository } from "../repositories/cart.repository.js";
 import { ProductRepository } from "../repositories/product.repository.js";
 import { TicketRepository } from "../repositories/ticket.repository.js";
-import { v4 as uuidv4 } from "uuid";
+import { PurchaseDTO } from "../dto/purchase.dto.js";
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
@@ -17,55 +17,53 @@ export class PurchaseService {
       throw new Error("Cart not found");
     }
 
-    const productsToPurchase = [];
+    const productsPurchased = [];
     const productsNotPurchased = [];
 
     let totalAmount = 0;
 
     for (const item of cart.products) {
 
-      const product = await productRepository.getProductById(item.product._id);
+      const product = await productRepository.getProductById(
+        item.product._id
+      );
 
       if (product.stock >= item.quantity) {
 
         product.stock -= item.quantity;
 
-        await product.save();
+        await productRepository.updateProduct(product._id, {
+          stock: product.stock
+        });
+
+        productsPurchased.push(item);
 
         totalAmount += product.price * item.quantity;
 
-        productsToPurchase.push(item);
-
       } else {
 
-        productsNotPurchased.push(item.product._id);
+        productsNotPurchased.push(item);
 
       }
 
     }
 
-    let ticket = null;
+    if (productsPurchased.length === 0) {
 
-    if (productsToPurchase.length > 0) {
-
-      ticket = await ticketRepository.createTicket({
-        code: uuidv4(),
-        amount: totalAmount,
-        purchaser: userEmail
-      });
+      return new PurchaseDTO(null, productsNotPurchased);
 
     }
 
-    cart.products = cart.products.filter(
-      p => productsNotPurchased.includes(p.product._id)
-    );
+    const ticket = await ticketRepository.createTicket({
+      amount: totalAmount,
+      purchaser: userEmail
+    });
 
-    await cart.save();
+    await cartRepository.updateCart(cartId, {
+      products: productsNotPurchased
+    });
 
-    return {
-      ticket,
-      productsNotPurchased
-    };
+    return new PurchaseDTO(ticket, productsNotPurchased);
 
   }
 

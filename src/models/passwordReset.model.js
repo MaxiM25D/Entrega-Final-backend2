@@ -9,12 +9,18 @@ const passwordResetSchema = new mongoose.Schema({
 
   token: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 
   expiresAt: {
     type: Date,
     required: true
+  },
+
+  used: {
+    type: Boolean,
+    default: false
   }
 
 });

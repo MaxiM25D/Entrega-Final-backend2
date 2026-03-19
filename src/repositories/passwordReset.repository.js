@@ -12,8 +12,8 @@ export class PasswordResetRepository {
     return dao.findByToken(token);
   }
 
-  deleteToken(token) {
-    return dao.delete(token);
+  markTokenUsed(token) {
+    return dao.markAsUsed(token);
   }
 
 }

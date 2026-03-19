@@ -10,8 +10,11 @@ export class PasswordResetDAO {
     return PasswordReset.findOne({ token });
   }
 
-  delete(token) {
-    return PasswordReset.deleteOne({ token });
+  markAsUsed(token) {
+    return PasswordReset.updateOne(
+      { token },
+      { used: true }
+    );
   }
 
 }

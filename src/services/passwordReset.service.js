@@ -1,61 +1,46 @@
 import crypto from "crypto";
 import { PasswordResetRepository } from "../repositories/passwordReset.repository.js";
-import { UserRepository } from "../repositories/user.repository.js";
-import { createHash, isValidPassword } from "../utils/bcrypt.js";
 
-const passwordResetRepo = new PasswordResetRepository();
-const userRepo = new UserRepository();
+const repository = new PasswordResetRepository();
 
 export class PasswordResetService {
 
-  async requestReset(email) {
-
-    const user = await userRepo.getUserByEmail(email);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
+  async generateToken(email) {
 
     const token = crypto.randomBytes(32).toString("hex");
 
-    const expires = new Date(Date.now() + 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 3600000);
 
-    await passwordResetRepo.createToken({
+    await repository.createToken({
       email,
       token,
-      expiresAt: expires
+      expiresAt
     });
 
     return token;
   }
 
-  async resetPassword(token, newPassword) {
+  async validateToken(token) {
 
-    const record = await passwordResetRepo.getToken(token);
+    const record = await repository.getToken(token);
 
     if (!record) {
       throw new Error("Invalid token");
+    }
+
+    if (record.used) {
+      throw new Error("Token already used");
     }
 
     if (record.expiresAt < new Date()) {
       throw new Error("Token expired");
     }
 
-    const user = await userRepo.getUserByEmail(record.email);
+    return record;
+  }
 
-    const samePassword = await isValidPassword(user, newPassword);
-
-    if (samePassword) {
-      throw new Error("Password cannot be the same");
-    }
-
-    user.password = createHash(newPassword);
-
-    await user.save();
-
-    await passwordResetRepo.deleteToken(token);
-
-    return true;
+  async markTokenUsed(token) {
+    await repository.markTokenUsed(token);
   }
 
 }

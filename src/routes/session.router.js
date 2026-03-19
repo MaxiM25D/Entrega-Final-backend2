@@ -2,8 +2,8 @@ import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import env from "../config/env.config.js";
-import {registerUser, currentUser} from "../controllers/session.controller.js";
-import {forgotPassword, resetPassword} from "../controllers/passwordReset.controller.js";
+import {registerUser, currentUser, forgotPassword, resetPassword} from "../controllers/session.controller.js";
+
 
 
 const router = Router();
