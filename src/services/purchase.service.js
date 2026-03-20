@@ -2,6 +2,7 @@ import { CartRepository } from "../repositories/cart.repository.js";
 import { ProductRepository } from "../repositories/product.repository.js";
 import { TicketRepository } from "../repositories/ticket.repository.js";
 import { PurchaseDTO } from "../dto/purchase.dto.js";
+import { sendPurchaseEmail } from "./mail.service.js";
 
 const cartRepository = new CartRepository();
 const productRepository = new ProductRepository();
@@ -62,6 +63,8 @@ export class PurchaseService {
     await cartRepository.updateCart(cartId, {
       products: productsNotPurchased
     });
+
+    await sendPurchaseEmail(userEmail, ticket, productsPurchased);
 
     return new PurchaseDTO(ticket, productsNotPurchased);
 

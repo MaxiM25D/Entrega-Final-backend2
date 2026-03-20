@@ -8,7 +8,9 @@ const env = {
     MONGO_URL: process.env.MONGO_URL || '',
     MONGO_ATLAS_URL: process.env.MONGO_ATLAS_URL || '',
     SECRET_SESSION: process.env.SECRET_SESSION || '',
-    JWT_SECRET: process.env.JWT_SECRET || ''
+    JWT_SECRET: process.env.JWT_SECRET || '',
+    MAIL_USER: process.env.MAIL_USER || '',
+    MAIL_PASS: process.env.MAIL_PASS || ''
 }
 
 export function validateEnv() {
