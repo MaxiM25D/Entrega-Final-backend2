@@ -22,7 +22,11 @@ export class PasswordResetService {
 
   async validateToken(token) {
 
+    console.log("TOKEN RECIBIDO:", token);
+
     const record = await repository.getToken(token);
+
+    console.log("RECORD EN DB:", record);
 
     if (!record) {
       throw new Error("Invalid token");

@@ -1,11 +1,12 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { UserManager } from "../../managers/user.manager.js";
+import { UserDAO } from "../../dao/user.dao.js";
 import { isValidPassword } from "../../utils/bcrypt.js";
 import env from "../env.config.js";
 
-const userManager = new UserManager();
+
+const userDao = new UserDAO();
 export const initPassport = () => {
 
    // 🔐 LOCAL STRATEGY (LOGIN)
@@ -19,7 +20,7 @@ export const initPassport = () => {
       async (email, password, done) => {
         try {
 
-          const user = await userManager.findByEmail(email);
+          const user = await userDao.getByEmail(email);
 
           if (!user) {
             return done(null, false, { message: "Usuario no encontrado" });
@@ -51,7 +52,7 @@ export const initPassport = () => {
       async (payload, done) => {
         try {
 
-          const user = await userManager.findById(payload.sub);
+          const user = await userDao.getById(payload.sub);
 
           if (!user) return done(null, false);
 

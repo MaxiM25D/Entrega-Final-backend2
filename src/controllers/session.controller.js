@@ -1,10 +1,10 @@
 import { SessionService } from "../services/session.service.js";
-import { sendResetPasswordEmail } from "../services/mail.service.js"
+
 import { UserDTO } from "../dto/user.dto.js";
 import { UserService } from "../services/user.service.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js"
 import { Cart } from "../models/cart.model.js";
-import { PasswordResetService } from "../services/password-reset.service.js";
+import { PasswordResetService } from "../services/passwordReset.service.js";
 
 
 const sessionService = new SessionService();
@@ -95,8 +95,8 @@ export const forgotPassword = async (req, res) => {
 
   const token = await passwordResetService.generateToken(email);
 
-  await sendResetPasswordEmail(email, token);
-
+  /* await sendResetPasswordEmail(email, token); */
+  console.log("TOKEN:", token);
   res.json({ message: "Reset email sent" });
 
 };
