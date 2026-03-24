@@ -20,6 +20,9 @@ export class UserService {
     return userRepository.createUser(data);
   }
 
+  updateUser(id, data) {
+  return userRepository.updateUser(id, data);
+}
   deleteUser(id) {
     return userRepository.deleteUser(id);
   }

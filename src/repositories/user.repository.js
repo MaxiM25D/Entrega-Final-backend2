@@ -20,6 +20,9 @@ export class UserRepository {
     return userDAO.create(data);
   }
 
+  updateUser(id, data) {
+  return userDAO.update(id, data);
+}
   deleteUser(id) {
     return userDAO.delete(id);
   }

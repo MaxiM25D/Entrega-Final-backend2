@@ -1,10 +1,10 @@
 import { SessionService } from "../services/session.service.js";
-
 import { UserDTO } from "../dto/user.dto.js";
 import { UserService } from "../services/user.service.js";
 import { createHash, isValidPassword } from "../utils/bcrypt.js"
 import { Cart } from "../models/cart.model.js";
 import { PasswordResetService } from "../services/passwordReset.service.js";
+import { sendResetPasswordEmail } from "../utils/mailer.js";
 
 
 const sessionService = new SessionService();
@@ -75,6 +75,12 @@ export const loginUser = async (req, res) => {
 
 };
 
+export const logoutUser = (req, res) => {
+  res.json({
+    message: "Logout exitoso"
+  });
+};
+
 export const currentUser = (req, res) => {
 
   res.json({
@@ -95,8 +101,7 @@ export const forgotPassword = async (req, res) => {
 
   const token = await passwordResetService.generateToken(email);
 
-  /* await sendResetPasswordEmail(email, token); */
-  console.log("TOKEN:", token);
+  await sendResetPasswordEmail(email, token);
   res.json({ message: "Reset email sent" });
 
 };

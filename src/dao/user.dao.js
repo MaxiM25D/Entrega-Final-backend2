@@ -18,6 +18,10 @@ export class UserDAO {
     return User.create(userData);
   }
 
+  update(id, data) {
+  return User.findByIdAndUpdate(id, data, { new: true });
+  }
+
   delete(id) {
     return User.findByIdAndDelete(id);
   }

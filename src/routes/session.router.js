@@ -2,7 +2,9 @@ import { Router } from "express";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import env from "../config/env.config.js";
-import {registerUser, currentUser, forgotPassword, resetPassword} from "../controllers/session.controller.js";
+import {registerUser, currentUser, forgotPassword, resetPassword, logoutUser} from "../controllers/session.controller.js";
+import { auth } from "../middleware/auth.middleware.js";
+import { authorize } from "../middleware/role.middleware.js";
 
 
 
@@ -37,9 +39,10 @@ router.post(
   }
 );
 
+router.post("/logout", auth, authorize("user"), logoutUser);
 // CURRENT con JwtStrategy
-router.get("/current", passport.authenticate("jwt", { session: false }), currentUser);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
+router.get("/current", passport.authenticate("jwt", { session: false }), auth, authorize("user"), currentUser);
+router.post("/forgot-password", auth, authorize("user"), forgotPassword );
+router.post("/reset-password", auth, authorize("user"), resetPassword);
 
 export default router;
