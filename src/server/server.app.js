@@ -5,7 +5,7 @@ import environment, { validateEnv } from "../config/env.config.js";
 import { connectAuto } from "../config/db/connect.config.js";
 import { initPassport } from "../config/auth/passport.config.js";
 import { initRouters } from "../routes/routes.js";
-import { cleanExpiredTokens } from "./jobs/cleanTokens.js";
+import { cleanExpiredTokens } from "../jobs/cleanTokens.js";
 
 
 
@@ -22,8 +22,10 @@ export const startServer = async () => {
 
   // Conectar DB
   await connectAuto();
-  // limpiar una vez al iniciar
+
+  // limpiar tokens al iniciar
   await cleanExpiredTokens();
+
   // 🧹 CRON JOB
   cron.schedule("*/10 * * * *", () => {
     console.log("🧹 Limpiando tokens...");
