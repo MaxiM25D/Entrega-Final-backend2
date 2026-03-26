@@ -25,9 +25,11 @@ export class PurchaseService {
 
     for (const item of cart.products) {
 
-      const product = await productRepository.getProductById(
-        item.product._id
-      );
+      const productId = item.product._id
+        ? item.product._id
+        : item.product;
+
+      const product = await productRepository.getProductById(productId);
 
       if (product.stock >= item.quantity) {
 

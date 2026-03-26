@@ -10,6 +10,9 @@ export class CartDAO {
     return Cart.findById(id).populate("products.product");
   }
 
+  update(id, data) {
+  return Cart.findByIdAndUpdate(id, data, { new: true });
+}
   save(cart) {
     return cart.save();
   }

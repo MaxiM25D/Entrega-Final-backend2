@@ -8,7 +8,7 @@ const router = Router();
 
 router.post("/", auth, createCart);
 router.get("/:cid", auth, getCartById);
-router.post("/products/:pid", auth, authorize("user", "admin"), addProductToCart);
+router.post("/:cid/products/:pid", auth, authorize("user", "admin"), addProductToCart);
 router.post("/purchases/:cid", auth, purchaseCart);
 
 
